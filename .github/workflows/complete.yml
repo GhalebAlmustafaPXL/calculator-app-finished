@@ -1,0 +1,32 @@
+name: Build Example
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@7.1.0
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bundle app into a zip
+        run: zip -r app.zip . -x ".git/*" ".git/*" ".github/*"
+
+      - name: Run unit tests with coverage report
+        run: npm test -- --coverage
+
+      - name: Jest Coverage Report
+        uses: Artiomtr/jest-coverage-report-action@v2
